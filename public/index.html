@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<div class="container">
+  <div class="Sidebar">Sidebar</div>
+
+  <div class="main">
+
+    <div class="search">Search</div>
+
+    <div class="boxContainer container1">
+      <div class="box Jack">Congratulations Jack 🎉</div>
+      <div class="box">Order</div>
+      <div class="box">Sales</div>
+      <div class="box">Expenses</div>
+    </div>
+
+    <div class="boxContainer container2">
+      <div class="box awesome">Awesome</div>
+      <div class="box financesummary">Finance Summary</div>
+    </div>
+
+    <div class="tableWrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Payment</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <!-- ✅ IMPORTANT -->
+        <tbody id="tableBody">
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script>
+async function loadTransactions() {
+  try {
+    const res = await fetch('/api/transactions'); // ✅ no localhost needed
+    const data = await res.json();
+
+    const tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = "";
+
+    data.forEach(tx => {
+      const row = `
+        <tr>
+          <td>${tx.product}</td>
+          <td>${tx.category}</td>
+          <td>₹${tx.amount}</td>
+          <td>${tx.status}</td>
+          <td>⋮</td>
+        </tr>
+      `;
+      tableBody.innerHTML += row;
+    });
+
+  } catch (err) {
+    console.error("Error loading transactions:", err);
+  }
+}
+
+// Load initially
+loadTransactions();
+
+// Auto refresh every 5 sec
+setInterval(loadTransactions, 5000);
+</script>
+
+</body>
+</html>
